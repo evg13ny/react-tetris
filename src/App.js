@@ -1,8 +1,11 @@
 import './App.css';
+import Game from './components/Game';
 
 function App() {
   return (
-    <h1>Hello React!</h1>
+    <div className='App'>
+      <Game rows={20} columns={10} />
+    </div>
   );
 }
 
