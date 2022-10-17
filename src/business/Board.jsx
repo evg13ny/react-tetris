@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { defaultCell } from './Cell'
+import { movePlayer } from './PlayerController'
 import { transferToBoard } from './Tetrominoes'
 
 export const buildBoard = ({ rows, columns }) => {
@@ -13,19 +14,57 @@ export const buildBoard = ({ rows, columns }) => {
     }
 }
 
+const findDropPosition = ({
+    board,
+    position,
+    shape
+}) => {
+    let max = board.size.rows - position.row + 1
+    let row = 0
+
+    for (let i = 0; i < max; i++) {
+        const delta = { row: i, column: 0 }
+        const result = movePlayer({ delta, position, shape, board })
+        const { collided } = result
+
+        if (collided) break
+
+        row = position.row + i
+    }
+
+    return { ...position, row }
+}
+
 export const nextBoard = ({ board, player, resetPlayer, addLinesCleared }) => {
     const { tetromino, position } = player
 
     let rows = board.rows.map((row) =>
         row.map((cell) => (cell.occupied ? cell : { ...defaultCell })))
 
-    rows = transferToBoard({
-        className: tetromino.className,
-        isOccupied: player.collided,
+    const dropPosition = findDropPosition({
+        board,
         position,
-        rows,
         shape: tetromino.shape
     })
+
+    const className = `${tetromino.className} ${player.isFastDropping ? '' : 'ghost'}`
+
+    rows = transferToBoard({
+        className,
+        isOccupied: player.isFastDropping,
+        position: dropPosition,
+        rows, shape: tetromino.shape
+    })
+
+    if (!player.isFastDropping) {
+        rows = transferToBoard({
+            className: tetromino.className,
+            isOccupied: player.collided,
+            position,
+            rows,
+            shape: tetromino.shape
+        })
+    }
 
     if (player.collided || player.isFastDropping) {
         resetPlayer()

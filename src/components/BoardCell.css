@@ -22,7 +22,12 @@
     border-radius: 4px 4px;
 }
 
-.tetromino .ghost .Sparkle {
+.tetromino.ghost {
+    background-color: transparent;
+    border: 2px solid rgba(255, 255, 255, .2);
+}
+
+.tetromino.ghost .Sparkle {
     opacity: 0;
 }
 
