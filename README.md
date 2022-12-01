@@ -1,4 +1,4 @@
-Tetris game made with React.
+Tetris game made with React. <a href="https://evg13ny.github.io/react-tetris/" target="_blank">Play here.</a>
 
 For start:
 * git clone [repository url]
